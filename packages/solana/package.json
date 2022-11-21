@@ -1,6 +1,6 @@
 {
   "name": "glitter-bridge-solana",
-  "version": "0.1.5",
+  "version": "0.0.1",
   "description": "Glitter Finance Bridge Solana Library",
   "scripts": {
     "build": "npx tsc",

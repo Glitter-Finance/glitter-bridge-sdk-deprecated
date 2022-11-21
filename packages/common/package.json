@@ -1,6 +1,6 @@
 {
   "name": "glitter-bridge-common",
-  "version": "0.1.18",
+  "version": "0.0.1",
   "description": "Glitter Finance Bridge Common Library",
   "scripts": {
     "build": "npx tsc",
@@ -22,10 +22,10 @@
   },
   "dependencies": {
     "chalk": "4.1.0",
-    "typescript": "^4.8.4",
-    "winston": "latest",
+    "minimist": "latest",
     "ts-node": "^10.9.1",
-    "minimist": "latest"
+    "typescript": "^4.8.4",
+    "winston": "latest"
   },
   "release-it": {
     "github": {
