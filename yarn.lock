@@ -4411,7 +4411,7 @@
 
 "glitter-bridge-common@file:C:\\Users\\Andrew\\Documents\\Github\\Glitter Finance\\Bridge\\Glitter\\glitter-bridge-sdk\\packages\\common":
   "resolved" "file:packages/common"
-  "version" "0.1.17"
+  "version" "0.1.18"
   dependencies:
     "chalk" "4.1.0"
     "minimist" "latest"
@@ -4432,7 +4432,7 @@
 
 "glitter-bridge-solana@file:C:\\Users\\Andrew\\Documents\\Github\\Glitter Finance\\Bridge\\Glitter\\glitter-bridge-sdk\\packages\\solana":
   "resolved" "file:packages/solana"
-  "version" "0.1.4"
+  "version" "0.1.5"
   dependencies:
     "@solana/spl-token" "^0.3.6"
     "@solana/web3.js" "^1.65.0"

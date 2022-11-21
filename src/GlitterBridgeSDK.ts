@@ -1,11 +1,11 @@
-import config, { Network } from './config/config';
+//import config, { Network } from './config/config';
 
 import { AlgorandConnect } from 'glitter-bridge-algorand/lib/connect';
 import { AlgorandBridge } from 'glitter-bridge-algorand/lib/bridge';
 import { SolanaConnect } from 'glitter-bridge-solana/lib/connect';
-import { AlgoBlockchainClient } from './Algorand/AlgoBlockchainClient';
 
-import { SolanaBlockchainClient } from './Solana/SolanaBlockchainClient';
+// import { AlgoBlockchainClient } from './Algorand/AlgoBlockchainClient';
+// import { SolanaBlockchainClient } from './Solana/SolanaBlockchainClient';
 
 export enum Environment {
   testnet,
@@ -14,10 +14,10 @@ export enum Environment {
 
 export default class GlitterBridgeSdk {
 
-  private _config: Network = {
-    Algorand: config.algorand.mainnet,
-    Solana: config.solana.mainnet
-  };
+  // private _config: Network = {
+  //   Algorand: config.algorand.mainnet,
+  //   Solana: config.solana.mainnet
+  // };
 
   //Bridge
   private _algorandBridge: AlgorandBridge | undefined;
@@ -27,12 +27,12 @@ export default class GlitterBridgeSdk {
   private _solanaConnection: SolanaConnect | undefined;
 
   //Setters
-  public setConfig(env: Environment) {
-    if (env == Environment.testnet) {
-      this._config = { Algorand: config.algorand.testnet, Solana: config.solana.testnet };
-    }
-    return this;
-  }
+  // public setConfig(env: Environment) {
+  //   if (env == Environment.testnet) {
+  //     this._config = { Algorand: config.algorand.testnet, Solana: config.solana.testnet };
+  //   }
+  //   return this;
+  // }
 
   /**
      * 
