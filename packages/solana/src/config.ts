@@ -7,6 +7,7 @@ export type SolanaConfig = {
     owner_address: string;
     assets_info: SolanaAssetConfig[];
   };  
+  
   export type SolanaAssetConfig = {
     symbol: string;
     type: string;

@@ -34,5 +34,6 @@
   },
   "files": [
     "lib/**/*"
-  ]
+  ],
+  "gitHead": "e99011fe6cb99576de68df1357089f78108dce5e"
 }
