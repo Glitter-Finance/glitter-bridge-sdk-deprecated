@@ -4402,7 +4402,7 @@
 
 "glitter-bridge-algorand@file:C:\\Users\\Andrew\\Documents\\Github\\Glitter Finance\\Bridge\\Glitter\\glitter-bridge-sdk\\packages\\algorand":
   "resolved" "file:packages/algorand"
-  "version" "0.2.0"
+  "version" "0.2.1"
   dependencies:
     "algosdk" "latest"
     "glitter-bridge-common" "latest"

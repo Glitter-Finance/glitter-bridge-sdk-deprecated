@@ -1,3 +1,6 @@
+import * as fs from 'fs'
+import * as minimist from 'minimist'
+
 export enum TokenParams {
     none = 0,
     name = 1 << 1,
@@ -58,27 +61,23 @@ export class BridgeTokens {
 
     //Load/Save Config
     public static loadConfig(path: string) {
-        BridgeTokens.config = require(path) as TokenConfig;
+        const configString = fs.readFileSync(path, 'utf8');
+        BridgeTokens.config = JSON.parse(configString) as TokenConfig;
     }
     public static saveConfig(path: string) {
-        let writeValue = JSON.stringify(BridgeTokens.config, (key, value) =>
+        const writeValue = JSON.stringify(BridgeTokens.config, (key, value) =>
             typeof value === 'bigint' ? value.toString() : value, 2);
-
-        let fs = require('fs')
-        fs.writeFileSync(path, writeValue, function (err: any) {
-            if (err) {
-                console.log(err);
-            }
-        });
+        
+        fs.writeFileSync(path, writeValue);
     }
 
     //Get Token Info
     public static getTokenInfo(network: string, symbol: string): TokenInfo | undefined {
         console.log(`matching: ${symbol.toLowerCase()} ${network.toLowerCase()}`);
 
-        let tokens = BridgeTokens.config.assets_info;
+        const tokens = BridgeTokens.config.assets_info;
         for (let i = 0; i < tokens.length; i++) {
-            let token = tokens[i];
+            const token = tokens[i];
             if (token.network.toLowerCase() === network.toLowerCase() &&
                 token.symbol.toLowerCase() === symbol.toLowerCase()) return token;
         }
@@ -87,11 +86,11 @@ export class BridgeTokens {
 
     public static loadFromCli(requiredParams?: TokenParams): TokenInfo | undefined {
 
-        let token = initToken();
+        const token = initToken();
         try {
 
             //parse params
-            var argv = require('minimist')(process.argv.slice(2));
+            const argv = minimist(process.argv.slice(2));
 
             token.name = argv.name;
             token.decimals = argv.d;
@@ -101,7 +100,7 @@ export class BridgeTokens {
             token.max_transfer = argv.max;
             token.fee_divisor = argv.fee;
 
-            let totalSupply = argv.t as string;
+            const totalSupply = argv.t as string;
             token.total_supply = (!totalSupply ? BigInt(0) : BigInt(totalSupply));
 
             //ensure params are set

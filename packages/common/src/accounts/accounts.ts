@@ -1,3 +1,5 @@
+import * as fs from 'fs'
+
 export type AccountConfig = {
     bridge_accounts: AccountInfo[];
     local_accounts: AccountInfo[];
@@ -40,44 +42,40 @@ export class BridgeAccounts {
 
     //Load/Save Config
     public static loadConfig(path: string) {
-        BridgeAccounts.config = require(path) as AccountConfig;
+        const configString = fs.readFileSync(path, 'utf8');
+        BridgeAccounts.config = JSON.parse(configString) as AccountConfig;
     }
     public static saveConfig(path: string) {
-        let writeValue = JSON.stringify(BridgeAccounts.config, (key, value) =>
+        const writeValue = JSON.stringify(BridgeAccounts.config, (key, value) =>
             typeof value === 'bigint' ? value.toString() : value, 2);
 
-        let fs = require('fs')
-        fs.writeFileSync(path, writeValue, function (err: any) {
-            if (err) {
-                console.log(err);
-            }
-        });
+        fs.writeFileSync(path, writeValue);
     }
 
     //Get Account Info
-    public static getAddress (name:BridgeAccountNames): string {
-        let network = name.split("_")[0];
-        let accountName = name.split("_")[1];
-        let info = BridgeAccounts.getAccountInfo(network, accountName);
+    public static getAddress(name: BridgeAccountNames): string {
+        const network = name.split("_")[0];
+        const accountName = name.split("_")[1];
+        const info = BridgeAccounts.getAccountInfo(network, accountName);
         if (info === undefined) {
             //Check msig
-            let msigInfo = BridgeAccounts.getMSigInfo(network, accountName);
+            const msigInfo = BridgeAccounts.getMSigInfo(network, accountName);
             if (msigInfo === undefined) {
                 throw new Error("Account not found: " + name);
             } else {
                 return msigInfo.address;
             }
-        }  else {
+        } else {
             return info.address;
         }
     }
     public static getAccountInfo(network: string, name: string): AccountInfo | undefined {
         console.log(`matching: ${name.toLowerCase()} ${network.toLowerCase()}`);
-        
-        let accounts = BridgeAccounts.config.bridge_accounts;
+
+        const accounts = BridgeAccounts.config.bridge_accounts;
         accounts.push(...BridgeAccounts.config.local_accounts);
         for (let i = 0; i < accounts.length; i++) {
-            let info = accounts[i];
+            const info = accounts[i];
             if (info.network.toLowerCase() === network.toLowerCase() &&
                 info.name.toLowerCase() === name.toLowerCase()) return info;
         }
@@ -86,11 +84,11 @@ export class BridgeAccounts {
     }
     public static getMSigInfo(network: string, name: string): BridgeMSigInfo | undefined {
         console.log(`matching: ${name.toLowerCase()} ${network.toLowerCase()}`);
-        
-        let accounts = BridgeAccounts.config.bridge_msigs;
+
+        const accounts = BridgeAccounts.config.bridge_msigs;
         accounts.push(...BridgeAccounts.config.local_msigs);
         for (let i = 0; i < accounts.length; i++) {
-            let info = accounts[i];
+            const info = accounts[i];
             if (info.network.toLowerCase() === network.toLowerCase() &&
                 info.name.toLowerCase() === name.toLowerCase()) return info;
         }

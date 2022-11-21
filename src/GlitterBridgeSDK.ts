@@ -4,6 +4,7 @@ import { AlgorandConnect } from 'glitter-bridge-algorand/lib/connect';
 import { AlgorandBridge } from 'glitter-bridge-algorand/lib/bridge';
 import { SolanaConnect } from 'glitter-bridge-solana/lib/connect';
 import { AlgorandConfig } from 'glitter-bridge-algorand/lib/config';
+import * as fs from 'fs'
 
 // import { AlgoBlockchainClient } from './Algorand/AlgoBlockchainClient';
 // import { SolanaBlockchainClient } from './Solana/SolanaBlockchainClient';
@@ -19,6 +20,8 @@ export default class GlitterBridgeSdk {
   //   Algorand: config.algorand.mainnet,
   //   Solana: config.solana.mainnet
   // };
+
+  private _algorandConfig: AlgorandConfig | undefined;
 
   //Bridge
   private _algorandBridge: AlgorandBridge | undefined;
@@ -43,9 +46,14 @@ export default class GlitterBridgeSdk {
      * @param algoIndexerPort Defaults to ""
      * @param algoNativeToken Defaults to ""
      */
-  public connectToAlgorand(config: AlgorandConfig): GlitterBridgeSdk {
-    this._algorandConnection = new AlgorandConnect(config);
-    this._algorandBridge = new AlgorandBridge( config);
+  public connectToAlgorand(configUrl: string): GlitterBridgeSdk {
+
+    //Load Config
+    const configString = fs.readFileSync(configUrl, 'utf8');
+    this._algorandConfig = JSON.parse(configString) as AlgorandConfig;
+
+    this._algorandConnection = new AlgorandConnect(this._algorandConfig);
+    this._algorandBridge = new AlgorandBridge(this._algorandConfig.appProgramId);
     return this;
   }
   public connectToSolana(
