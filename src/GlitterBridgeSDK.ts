@@ -5,22 +5,24 @@ import { AlgorandBridge } from 'glitter-bridge-algorand/lib/bridge';
 import { SolanaConnect } from 'glitter-bridge-solana/lib/connect';
 import { AlgorandConfig } from 'glitter-bridge-algorand/lib/config';
 import * as fs from 'fs'
+import path from 'path';
+import { GlitterNetwork, Networks } from './networks/GlitterNetwork';
 
 // import { AlgoBlockchainClient } from './Algorand/AlgoBlockchainClient';
 // import { SolanaBlockchainClient } from './Solana/SolanaBlockchainClient';
 
 export enum Environment {
-  testnet,
-  mainnet,
+  testnet = 'testnet',
+  mainnet = 'mainnet',
 }
 
 export default class GlitterBridgeSdk {
 
-  // private _config: Network = {
-  //   Algorand: config.algorand.mainnet,
-  //   Solana: config.solana.mainnet
-  // };
+  //Directory
+  private _rootDirectory: string|undefined;
 
+  //Configs
+  private _glitterEnvironment: GlitterNetwork|undefined;
   private _algorandConfig: AlgorandConfig | undefined;
 
   //Bridge
@@ -31,29 +33,41 @@ export default class GlitterBridgeSdk {
   private _solanaConnection: SolanaConnect | undefined;
 
   //Setters
-  // public setConfig(env: Environment) {
-  //   if (env == Environment.testnet) {
-  //     this._config = { Algorand: config.algorand.testnet, Solana: config.solana.testnet };
-  //   }
-  //   return this;
-  // }
+  public setRootDirectory(rootDirectory: string): GlitterBridgeSdk {
+    this._rootDirectory = rootDirectory;
+    return this;
+  }
+  public setEnvironment(network: Networks): GlitterBridgeSdk {
 
-  /**
-     * 
-     * @param algoServerUrl Defaults to 'https://node.algoexplorerapi.io'
-     * @param algoServerPort Defaults to ""
-     * @param algoIndexerUrl Defaults to 'https://algoindexer.algoexplorerapi.io'
-     * @param algoIndexerPort Defaults to ""
-     * @param algoNativeToken Defaults to ""
-     */
-  public connectToAlgorand(configUrl: string): GlitterBridgeSdk {
+    //Fail safe
+    if (!this._rootDirectory) throw new Error("Root directory not set");
 
-    //Load Config
+    //Get the environment config path
+    let configUrl = '';
+    switch (network) {
+      case Networks.mainnet:
+      case Networks.testnet:
+        configUrl = path.join(this._rootDirectory, `./src/networks/${Environment.mainnet}/${Environment.mainnet}.settings.json`);
+        break;
+    }
+
+    //Read the config file
     const configString = fs.readFileSync(configUrl, 'utf8');
-    this._algorandConfig = JSON.parse(configString) as AlgorandConfig;
+    this._glitterEnvironment = JSON.parse(configString) as GlitterNetwork;
 
-    this._algorandConnection = new AlgorandConnect(this._algorandConfig);
-    this._algorandBridge = new AlgorandBridge(this._algorandConfig.appProgramId);
+    return this;
+  }
+
+  //Connectors
+  public connectToAlgorand(): GlitterBridgeSdk {
+
+    //Failsafe
+    if (!this._glitterEnvironment) throw new Error("Glitter environment not set");
+    if (!this._glitterEnvironment.algorand) throw new Error("Algorand environment not set");
+
+    //Get the connections
+    this._algorandConnection = new AlgorandConnect(this._glitterEnvironment.algorand);
+    this._algorandBridge = new AlgorandBridge(this._glitterEnvironment.algorand.appProgramId);
     return this;
   }
   public connectToSolana(

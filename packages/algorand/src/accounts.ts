@@ -19,19 +19,26 @@ export class AlgorandAccounts {
 
     public static add(sk: string|undefined, logger: Logger | undefined): AlgorandAccount|undefined {
 
+        //Fail Safe
         if (!sk) {
             logger?.error("sk not defined");
             return undefined;
         }
 
+        //Convert seed to Account
         const local_acccount = algosdk.mnemonicToSecretKey(sk) as AlgorandAccount;
         if (!local_acccount){
             logger?.error("sk not valid");
             return undefined;
         }
 
+        //Add to accounts
         this._accounts[local_acccount.addr] = local_acccount;
 
+        //Log
+        logger?.log(`Added Algorand Wallet:  ${local_acccount.addr}`)
+
+        //return
         return local_acccount;
     }
     public static addMSIG(addreses:string[],version = 1,threshold=2 ){
