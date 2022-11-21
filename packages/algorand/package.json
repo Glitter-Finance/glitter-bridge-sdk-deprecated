@@ -1,6 +1,6 @@
 {
   "name": "glitter-bridge-algorand",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Glitter Finance Bridge Algorand Library",
   "scripts": {
     "build": "npx tsc",
