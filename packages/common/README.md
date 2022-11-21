@@ -1,0 +1,1 @@
+# glitter-bridge-common-core

@@ -1,0 +1,38 @@
+{
+  "name": "glitter-bridge-common",
+  "version": "0.1.17",
+  "description": "Glitter Finance Bridge Common Library",
+  "scripts": {
+    "build": "npx tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release": "release-it"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Glitter-Finance/glitter-bridge-sdk.git"
+  },
+  "author": "Glitter Finance",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Glitter-Finance/glitter-bridge-sdk/issues"
+  },
+  "homepage": "https://github.com/Glitter-Finance/glitter-bridge-sdk#readme",
+  "devDependencies": {
+    "release-it": "^15.5.0"
+  },
+  "dependencies": {
+    "chalk": "4.1.0",
+    "typescript": "^4.8.4",
+    "winston": "latest",
+    "ts-node": "^10.9.1",
+    "minimist": "latest"
+  },
+  "release-it": {
+    "github": {
+      "release": true
+    }
+  },
+  "files": [
+    "lib/**/*"
+  ]
+}
