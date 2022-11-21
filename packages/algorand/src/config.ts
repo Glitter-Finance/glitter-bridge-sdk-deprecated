@@ -1,17 +1,11 @@
 export type AlgorandConfig = {
     name: string;
-    server?: string;
-    serverPort?: string;
-    indexer?: string;
-    indexerPort?: string;
-    nativeToken?: string;
-    appProgramId?: number;
-    bridgeOwnerAddress: string;
-    asaVaultOwnerAddress: string;
-    feeReceiverOwnerAddress: string;
-    algoVaultOwnerAddress: string;
-    mSig1Address: string;
-    mSig2Address: string;
+    serverUrl: string;
+    serverPort: string|number;
+    indexerUrl: string;
+    indexerPort: string|number;
+    nativeToken: string;
+    appProgramId: number;
     assets_info: AlgorandAssetConfig[];
 }
 

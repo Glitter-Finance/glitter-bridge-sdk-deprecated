@@ -1,7 +1,7 @@
 import GlitterBridgeSdk from "../src/GlitterBridgeSDK";
 
  const glitterBridgeSdk = new GlitterBridgeSdk()
- .setAlgorand(
+ .connectToAlgorand(
      "https://node.algoexplorerapi.io",
      "",
      "https://algoindexer.algoexplorerapi.io",
@@ -9,4 +9,4 @@ import GlitterBridgeSdk from "../src/GlitterBridgeSDK";
      "",
      98624397
  )
- .setSolanaConnection("https://api.mainnet-beta.solana.com")
+ .connectToSolana("https://api.mainnet-beta.solana.com")

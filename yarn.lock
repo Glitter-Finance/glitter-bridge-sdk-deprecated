@@ -4245,11 +4245,6 @@
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
 
-"fsevents@^2.3.2", "fsevents@~2.3.2":
-  "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
-  "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
-  "version" "2.3.2"
-
 "ftp@^0.3.10":
   "integrity" "sha512-faFVML1aBx2UoDStmLwv2Wptt4vw5x03xxX172nhA5Y5HBshW5JweqQ2W4xL4dezQTG8inJsuYcpPHHU3X5OTQ=="
   "resolved" "https://registry.npmjs.org/ftp/-/ftp-0.3.10.tgz"
@@ -4407,7 +4402,7 @@
 
 "glitter-bridge-algorand@file:C:\\Users\\Andrew\\Documents\\Github\\Glitter Finance\\Bridge\\Glitter\\glitter-bridge-sdk\\packages\\algorand":
   "resolved" "file:packages/algorand"
-  "version" "0.1.0"
+  "version" "0.2.0"
   dependencies:
     "algosdk" "latest"
     "glitter-bridge-common" "latest"
@@ -4416,7 +4411,7 @@
 
 "glitter-bridge-common@file:C:\\Users\\Andrew\\Documents\\Github\\Glitter Finance\\Bridge\\Glitter\\glitter-bridge-sdk\\packages\\common":
   "resolved" "file:packages/common"
-  "version" "0.1.0"
+  "version" "0.2.0"
   dependencies:
     "chalk" "4.1.0"
     "minimist" "latest"
@@ -4437,7 +4432,7 @@
 
 "glitter-bridge-solana@file:C:\\Users\\Andrew\\Documents\\Github\\Glitter Finance\\Bridge\\Glitter\\glitter-bridge-sdk\\packages\\solana":
   "resolved" "file:packages/solana"
-  "version" "0.1.0"
+  "version" "0.2.0"
   dependencies:
     "@solana/spl-token" "^0.3.6"
     "@solana/web3.js" "^1.65.0"

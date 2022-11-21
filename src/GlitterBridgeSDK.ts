@@ -3,6 +3,7 @@
 import { AlgorandConnect } from 'glitter-bridge-algorand/lib/connect';
 import { AlgorandBridge } from 'glitter-bridge-algorand/lib/bridge';
 import { SolanaConnect } from 'glitter-bridge-solana/lib/connect';
+import { AlgorandConfig } from 'glitter-bridge-algorand/lib/config';
 
 // import { AlgoBlockchainClient } from './Algorand/AlgoBlockchainClient';
 // import { SolanaBlockchainClient } from './Solana/SolanaBlockchainClient';
@@ -42,18 +43,12 @@ export default class GlitterBridgeSdk {
      * @param algoIndexerPort Defaults to ""
      * @param algoNativeToken Defaults to ""
      */
-  public setAlgorand(
-    algoServerUrl = 'https://node.algoexplorerapi.io',
-    algoServerPort: string | number = "",
-    algoIndexerUrl = 'https://algoindexer.algoexplorerapi.io',
-    algoIndexerPort: string | number = "",
-    algoNativeToken = "",
-    algoBridgeAppID = 0): GlitterBridgeSdk {
-    this._algorandConnection = new AlgorandConnect(algoServerUrl, algoServerPort, algoIndexerUrl, algoIndexerPort, algoNativeToken);
-    this._algorandBridge = new AlgorandBridge( algoBridgeAppID);
+  public connectToAlgorand(config: AlgorandConfig): GlitterBridgeSdk {
+    this._algorandConnection = new AlgorandConnect(config);
+    this._algorandBridge = new AlgorandBridge( config);
     return this;
   }
-  public setSolanaConnection(
+  public connectToSolana(
     solanaUrl = 'https://api.mainnet-beta.solana.com'
   ): GlitterBridgeSdk {
     this._solanaConnection = new SolanaConnect(solanaUrl);

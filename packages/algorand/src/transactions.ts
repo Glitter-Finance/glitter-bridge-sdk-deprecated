@@ -1,39 +1,37 @@
-const { default: algosdk } = require('algosdk');
+//const { default: algosdk } = require('algosdk');
+import * as algosdk from 'algosdk';
 import { Account, Algodv2, Transaction } from "algosdk";
 import { RoutingData } from "glitter-bridge-common/lib/routing";
 import { TokenInfo } from "glitter-bridge-common/lib/tokens";
 import { Logger } from "glitter-bridge-common/lib/Utils/logger";
+import * as fs from 'fs';
 
 export class AlgorandTransactions {
 
     //Txn Definitions
     static async algoSendTransaction(client: Algodv2,
         routing: RoutingData): Promise<Transaction> {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             try {
                 //Get Default Parameters
-                let params = await client.getTransactionParams().do();
+                const params = await client.getTransactionParams().do();
                 params.fee = 1000;
                 params.flatFee = true;
 
                 //Encode Note
-                var noteString = JSON.stringify(routing);
-                let note = algosdk.encodeObj(
-                    JSON.stringify({
-                        system: noteString,
-                        date: `${new Date()}`,
-                    })
-                );
+                const note = algosdk.encodeObj({
+                    routing: JSON.stringify(routing),
+                    date: `${new Date()}`,
+                });
 
-                let txn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+                const txn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
                     suggestedParams: params,
-                    type: "pay",
                     from: routing.from_address,
                     to: routing.to_address,
                     amount: Number(routing.amount),
                     note: note,
                     closeRemainderTo: undefined,
-                    revocationTarget: undefined,
                     rekeyTo: undefined,
                 });
 
@@ -48,33 +46,30 @@ export class AlgorandTransactions {
     static async tokenSendTransaction(client: Algodv2,
         routing: RoutingData,
         token: TokenInfo): Promise<Transaction> {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             try {
 
                 //Get amount
-                let amount_bigInt = BigInt(routing.amount * Math.pow(10, token.decimals));
+                const amount_bigInt = BigInt(routing.amount * Math.pow(10, token.decimals));
 
                 //Get Default Parameters
-                let params = await client.getTransactionParams().do();
+                const params = await client.getTransactionParams().do();
                 params.fee = 1000;
                 params.flatFee = true;
 
-                var assetID = token.asset_id;
+                const assetID = token.asset_id;
 
                 //Encode Note
-                var noteString = JSON.stringify(routing);
-                let note = algosdk.encodeObj(
-                    JSON.stringify({
-                        system: noteString,
-                        date: `${new Date()}`,
-                    })
-                );
+                const note = algosdk.encodeObj({
+                    routing: JSON.stringify(routing),
+                    date: `${new Date()}`,
+                });
 
                 console.log(`Sending ${amount_bigInt} ${token.name} from ${routing.from_address} to ${routing.to_address}`);
 
-                let txn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+                const txn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
                     suggestedParams: params,
-                    type: "axfer",
                     assetIndex: Number(assetID),
                     from: routing.from_address,
                     to: routing.to_address,
@@ -101,6 +96,7 @@ export class AlgorandTransactions {
     static async optinTransaction(client: Algodv2,
         address: string,
         token_asset_id: number): Promise<Transaction> {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             try {
                 //Get Default Transaction Params
@@ -133,17 +129,18 @@ export class AlgorandTransactions {
         signer: Account,
         logger: Logger,
         debug_rootPath?: string): Promise<boolean> {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             try {
 
-                var transactions: Transaction[] = [];
+                const transactions: Transaction[] = [];
                 transactions.push(await this.algoSendTransaction(client, routing));
 
                 //Get Signer
                 //let signer = deployer.accounts?.account(routing.from_address);
                 if (!signer) throw new Error("Signer is required");
 
-                let result = await this.signAndSend_SingleSigner(transactions, client, [signer], logger, debug_rootPath)
+                await this.signAndSend_SingleSigner(transactions, client, [signer], logger, debug_rootPath)
 
                 resolve(true);
 
@@ -159,19 +156,20 @@ export class AlgorandTransactions {
         token: TokenInfo,
         logger: Logger,
         debug_rootPath?: string): Promise<boolean> {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             try {
 
                 logger.log(`Sending ${routing.amount} ${token.name} from ${routing.from_address} to ${routing.to_address}`);
 
-                var transactions: Transaction[] = [];
+                const transactions: Transaction[] = [];
                 transactions.push(await this.tokenSendTransaction(client, routing, token));
 
                 //Get Signer
                 //let signer = deployer.accounts?.account(routing.from_address);
                 if (!signer) throw new Error("Signer is required");
 
-                let result = await this.signAndSend_SingleSigner(transactions, client, [signer], logger, debug_rootPath)
+                await this.signAndSend_SingleSigner(transactions, client, [signer], logger, debug_rootPath)
                 logger.log(`Txn Completed`);
                 resolve(true);
 
@@ -183,23 +181,24 @@ export class AlgorandTransactions {
     }
     static async mintTokens(client: Algodv2,
         signers: Account[],
-        msigParams: any,
+        msigParams: algosdk.MultisigMetadata,
         routing: RoutingData,
         token: TokenInfo,
         logger: Logger,
         debug_rootPath?: string): Promise<boolean> {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             try {
 
                 logger.log(`Minting ${routing.amount} ${token.name} to ${routing.to_address}`);
 
-                
+
                 //Set From Address
                 //routing.from_address = accounts.asaVaultMSigAddress;
 
-                var transactions: Transaction[] = [];
+                const transactions: Transaction[] = [];
                 transactions.push(await this.tokenSendTransaction(client, routing, token));
-                var result = await this.signAndSend_MultiSig(transactions, client, signers, msigParams, logger, debug_rootPath);
+                await this.signAndSend_MultiSig(transactions, client, signers, msigParams, logger, debug_rootPath);
                 logger.log("Minting Completed")
                 resolve(true);
 
@@ -214,6 +213,7 @@ export class AlgorandTransactions {
         routing: RoutingData,
         token: TokenInfo,
         logger: Logger): Promise<boolean> {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             try {
 
@@ -222,8 +222,8 @@ export class AlgorandTransactions {
                 //Get Signer                
                 if (!token.asset_id) throw new Error("asset_id is required");
 
-                var transactions: Transaction[] = [];
-                let txn = await this.optinTransaction(client, routing.from_address, token.asset_id);
+                const transactions: Transaction[] = [];
+                const txn = await this.optinTransaction(client, routing.from_address, token.asset_id);
                 transactions.push(txn);
 
                 // //Get Signer
@@ -231,7 +231,7 @@ export class AlgorandTransactions {
                 // if (!signer) throw new Error("Signer is required");
 
                 //Send Txn
-                var result = await this.signAndSend_SingleSigner(transactions, client, [signer], logger);
+                await this.signAndSend_SingleSigner(transactions, client, [signer], logger);
                 logger.log(`Optin Completed`);
                 resolve(true);
 
@@ -247,6 +247,7 @@ export class AlgorandTransactions {
         signers: Account[],
         logger: Logger,
         debug_rootPath?: string): Promise<boolean> {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             try {
 
@@ -261,12 +262,12 @@ export class AlgorandTransactions {
                 if (groupedTxns.length == 0) throw new Error("No Transactions to sign");
                 if (groupedTxns.length > 4) throw new Error("Maximum 4 Transactions in a group");
 
-                let signedTxns: Uint8Array[] = [];
+                const signedTxns: Uint8Array[] = [];
                 const groupID = algosdk.computeGroupID(groupedTxns);
 
                 for (let i = 0; i < groupedTxns.length; i++) {
                     groupedTxns[i].group = groupID;
-                    let signedTxn: Uint8Array = groupedTxns[i].signTxn(signers[0].sk);
+                    const signedTxn: Uint8Array = groupedTxns[i].signTxn(signers[0].sk);
                     signedTxns.push(signedTxn);
                 }
 
@@ -276,12 +277,12 @@ export class AlgorandTransactions {
 
                 //Prep and Send Transactions
                 logger.log('------------------------------')
-                let txnResult = await client.sendRawTransaction(signedTxns).do();
-                const confirmedTxn = await algosdk.waitForConfirmation(client, groupedTxns[0].txID().toString(), 4);
+                const txnResult = await client.sendRawTransaction(signedTxns).do();
+                await algosdk.waitForConfirmation(client, groupedTxns[0].txID().toString(), 4);
                 logger.log('------------------------------')
                 logger.log('Group Transaction ID: ' + txnResult.txId);
                 for (let i = 0; i < groupedTxns.length; i++) {
-                    let txnID = groupedTxns[i].txID().toString();
+                    const txnID = groupedTxns[i].txID().toString();
                     logger.log('Transaction ' + i + ': ' + txnID);
                 }
                 logger.log('------------------------------')
@@ -295,9 +296,10 @@ export class AlgorandTransactions {
     static async signAndSend_MultiSig(groupedTxns: Transaction[],
         client: Algodv2,
         signers: Account[],
-        mParams: any,
+        mParams: algosdk.MultisigMetadata,
         logger: Logger,
         debug_rootPath?: string): Promise<boolean> {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             try {
 
@@ -312,7 +314,7 @@ export class AlgorandTransactions {
                 if (groupedTxns.length == 0) throw new Error("No Transactions to sign");
                 if (groupedTxns.length > 4) throw new Error("Maximum 4 Transactions in a group");
 
-                let signedTxns: Uint8Array[] = [];
+                const signedTxns: Uint8Array[] = [];
                 const groupID = algosdk.computeGroupID(groupedTxns);
 
                 for (let i = 0; i < groupedTxns.length; i++) {
@@ -332,12 +334,12 @@ export class AlgorandTransactions {
 
                 //Prep and Send Transactions
                 logger.log('------------------------------')
-                let txnResult = await client.sendRawTransaction(signedTxns).do();
-                const confirmedTxn = await algosdk.waitForConfirmation(client, groupedTxns[0].txID().toString(), 4);
+                const txnResult = await client.sendRawTransaction(signedTxns).do();
+                await algosdk.waitForConfirmation(client, groupedTxns[0].txID().toString(), 4);
                 logger.log('------------------------------')
                 logger.log('Group Transaction ID: ' + txnResult.txId);
                 for (let i = 0; i < groupedTxns.length; i++) {
-                    let txnID = groupedTxns[i].txID().toString();
+                    const txnID = groupedTxns[i].txID().toString();
                     logger.log('Transaction ' + i + ': ' + txnID);
                 }
                 logger.log('------------------------------')
@@ -348,18 +350,18 @@ export class AlgorandTransactions {
             }
         });
     }
-    
+
     static async createDryrun(client: Algodv2, rawSignedTxnBuff: Uint8Array[], rootPath?: string): Promise<boolean> {
-        return new Promise(async (resolve, reject) => {
+        // eslint-disable-next-line no-async-promise-executor
+        return new Promise(async (resolve) => {
             try {
 
                 //Make sure root path is defined
                 if (!rootPath) resolve(false);
 
-                let fs = require('fs')
-                var dryRun = null;
+                let dryRun = null;
 
-                let txnsDecoded = rawSignedTxnBuff.map((txn) => {
+                const txnsDecoded = rawSignedTxnBuff.map((txn) => {
                     return algosdk.decodeSignedTransaction(txn);
                 });
 

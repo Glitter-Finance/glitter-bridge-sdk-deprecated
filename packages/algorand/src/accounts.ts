@@ -24,7 +24,7 @@ export class AlgorandAccounts {
             return undefined;
         }
 
-        let local_acccount = algosdk.mnemonicToSecretKey(sk) as AlgorandAccount;
+        const local_acccount = algosdk.mnemonicToSecretKey(sk) as AlgorandAccount;
         if (!local_acccount){
             logger?.error("sk not valid");
             return undefined;
@@ -34,17 +34,17 @@ export class AlgorandAccounts {
 
         return local_acccount;
     }
-    public static addMSIG(addreses:string[],version:number = 1,threshold:number=2 ){
+    public static addMSIG(addreses:string[],version = 1,threshold=2 ){
 
-        let params = {
+        const params = {
             version: version,
             threshold: threshold,
             addrs: addreses
         } as MultisigMetadata;
 
-        let addr = algosdk.multisigAddress(params);
+        const addr = algosdk.multisigAddress(params);
 
-        let msig:AlgorandMSigAccount = {
+        const msig:AlgorandMSigAccount = {
             addr: addr,
             addresses: addreses,
             params: params
@@ -64,6 +64,7 @@ export class AlgorandAccounts {
 
     //Account Query
     static async getTokensHeld(client: Algodv2, address: string, token: TokenInfo): Promise<number> {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             try {
 
@@ -71,10 +72,10 @@ export class AlgorandAccounts {
                 if (!token) throw new Error("Token not defined");
                 if (!address) throw new Error("Address not defined");
 
-                let accountInfo = await client.accountInformation(address).do();
+                const accountInfo = await client.accountInformation(address).do();
                 if (!accountInfo) throw new Error("Account Info not found");
 
-                let tokensHeld: number = 0;
+                let tokensHeld = 0;
                 for (let i = 0; i < accountInfo.assets.length; i++) {
                     if (accountInfo.assets[i]['asset-id'] == token.asset_id) {
                         tokensHeld = accountInfo.assets[i].amount;
