@@ -6,8 +6,7 @@ export type SolanaConfig = {
     vesting_program_id: string;
     owner_address: string;
     assets_info: SolanaAssetConfig[];
-  };
-  
+  };  
   export type SolanaAssetConfig = {
     symbol: string;
     type: string;

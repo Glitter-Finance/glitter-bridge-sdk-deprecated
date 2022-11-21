@@ -4402,7 +4402,7 @@
 
 "glitter-bridge-algorand@file:C:\\Users\\Andrew\\Documents\\Github\\Glitter Finance\\Bridge\\Glitter\\glitter-bridge-sdk\\packages\\algorand":
   "resolved" "file:packages/algorand"
-  "version" "0.1.15"
+  "version" "0.0.1"
   dependencies:
     "algosdk" "latest"
     "glitter-bridge-common" "latest"
@@ -4411,7 +4411,7 @@
 
 "glitter-bridge-common@file:C:\\Users\\Andrew\\Documents\\Github\\Glitter Finance\\Bridge\\Glitter\\glitter-bridge-sdk\\packages\\common":
   "resolved" "file:packages/common"
-  "version" "0.1.18"
+  "version" "0.0.1"
   dependencies:
     "chalk" "4.1.0"
     "minimist" "latest"
@@ -4432,7 +4432,7 @@
 
 "glitter-bridge-solana@file:C:\\Users\\Andrew\\Documents\\Github\\Glitter Finance\\Bridge\\Glitter\\glitter-bridge-sdk\\packages\\solana":
   "resolved" "file:packages/solana"
-  "version" "0.1.5"
+  "version" "0.0.1"
   dependencies:
     "@solana/spl-token" "^0.3.6"
     "@solana/web3.js" "^1.65.0"
