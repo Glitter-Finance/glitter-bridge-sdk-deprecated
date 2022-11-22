@@ -13,7 +13,7 @@ export class SolanaAccounts {
 
     private static _accounts: Record<string, SolanaAccount> = {};
     
-    public static async add(mnemonic: string, logger: Logger | undefined): Promise<SolanaAccount> {
+    public static async add(mnemonic: string|undefined, logger: Logger | undefined): Promise<SolanaAccount> {
         // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             try {

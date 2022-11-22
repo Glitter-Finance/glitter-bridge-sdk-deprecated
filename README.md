@@ -21,9 +21,15 @@ npx ts-node tests/local
 
 
 
+//Clean package
+docker-compose down -v
 
+//Git commit
+npx cz
 
-
-
+//Publish 
 npx lerna run build
 npx lerna publish  
+
+yarn2:
+yarn set version berry

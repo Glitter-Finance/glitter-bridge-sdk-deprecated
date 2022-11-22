@@ -7,6 +7,7 @@ import { AlgorandConfig } from 'glitter-bridge-algorand/lib/config';
 import * as fs from 'fs'
 import path from 'path';
 import { GlitterNetwork, Networks } from './networks/GlitterNetwork';
+import { Logger } from "glitter-bridge-common/lib/Utils/logger";
 
 // import { AlgoBlockchainClient } from './Algorand/AlgoBlockchainClient';
 // import { SolanaBlockchainClient } from './Solana/SolanaBlockchainClient';
@@ -19,10 +20,10 @@ export enum Environment {
 export default class GlitterBridgeSdk {
 
   //Directory
-  private _rootDirectory: string|undefined;
+  private _rootDirectory: string | undefined;
 
   //Configs
-  private _glitterEnvironment: GlitterNetwork|undefined;
+  private _glitterEnvironment: GlitterNetwork | undefined;
   private _algorandConfig: AlgorandConfig | undefined;
 
   //Bridge
@@ -31,6 +32,9 @@ export default class GlitterBridgeSdk {
   //Connections
   private _algorandConnection: AlgorandConnect | undefined;
   private _solanaConnection: SolanaConnect | undefined;
+
+  //Utils  
+  private _logger: Logger;
 
   //Setters
   public setRootDirectory(rootDirectory: string): GlitterBridgeSdk {
@@ -58,6 +62,16 @@ export default class GlitterBridgeSdk {
     return this;
   }
 
+  //Loaders
+  public loadLogger(logFileName: string): GlitterBridgeSdk {
+    if (!this._rootDirectory) throw new Error("Root directory not set");
+    if (!logFileName) throw new Error("Log file name not set");
+
+    this._logger = new Logger(this._rootDirectory, logFileName);
+    this._logger.log("Logger Loaded");
+    return this;
+  }
+
   //Connectors
   public connectToAlgorand(): GlitterBridgeSdk {
 
@@ -78,6 +92,9 @@ export default class GlitterBridgeSdk {
   }
 
   //Getters  
+  get logger(): Logger | undefined {
+    return this._logger;
+  }
   get algoClient() {
     if (!this._algorandConnection) throw new Error("Algorand connection not set");
     const client = this._algorandConnection.algoClient;
