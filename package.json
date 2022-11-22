@@ -4,6 +4,10 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "build": "npx tsc",
+    "test": "jest --coverage"
+  },
   "dependencies": {
     "@solana/spl-token": "^0.3.6",
     "@solana/web3.js": "^1.65.0",
@@ -24,9 +28,7 @@
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.23.0",
     "jest": "^28.0.0",
-    "lerna": "^6.0.3",
     "prettier": "^2.7.1",
     "release-it": "^15.5.0",
     "ts-jest": "^28.0.8",
@@ -41,5 +43,9 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "packageManager": "yarn@3.3.0"
+  "files": [
+    "lib/**/*"
+  ],
+  "packageManager": "yarn@3.3.0",
+  "version": "0.2.5"
 }

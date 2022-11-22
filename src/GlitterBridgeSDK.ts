@@ -4,8 +4,10 @@ import { AlgorandConnect } from 'glitter-bridge-algorand/lib/connect';
 import { AlgorandBridge } from 'glitter-bridge-algorand/lib/bridge';
 import { SolanaConnect } from 'glitter-bridge-solana/lib/connect';
 import { AlgorandConfig } from 'glitter-bridge-algorand/lib/config';
+import { AlgorandAccounts } from 'glitter-bridge-algorand/lib/accounts';
+import { AlgorandAssets } from 'glitter-bridge-algorand/lib/assets';
 import * as fs from 'fs'
-import path from 'path';
+import * as path from 'path';
 import { GlitterNetwork, Networks } from './networks/GlitterNetwork';
 import { Logger } from "glitter-bridge-common/lib/Utils/logger";
 
@@ -34,7 +36,7 @@ export default class GlitterBridgeSdk {
   private _solanaConnection: SolanaConnect | undefined;
 
   //Utils  
-  private _logger: Logger|undefined;
+  private _logger: Logger | undefined;
 
   //Setters
   public setRootDirectory(rootDirectory: string): GlitterBridgeSdk {
@@ -51,7 +53,7 @@ export default class GlitterBridgeSdk {
     switch (network) {
       case Networks.mainnet:
       case Networks.testnet:
-        configUrl = path.join(this._rootDirectory, `./src/networks/${Environment.mainnet}/${Environment.mainnet}.settings.json`);
+        configUrl = path.join(this._rootDirectory, `./src/networks/${network.toString()}/${network.toString()}.settings.json`);
         break;
     }
 
@@ -82,6 +84,11 @@ export default class GlitterBridgeSdk {
     //Get the connections
     this._algorandConnection = new AlgorandConnect(this._glitterEnvironment.algorand);
     this._algorandBridge = new AlgorandBridge(this._glitterEnvironment.algorand.appProgramId);
+
+    if (!this._algorandConnection.algoClient) throw new Error("Algorand client not set");
+    AlgorandAccounts.setClient(this._algorandConnection.algoClient);
+    AlgorandAssets.setClient(this._algorandConnection.algoClient);
+
     return this;
   }
   public connectToSolana(
@@ -95,23 +102,29 @@ export default class GlitterBridgeSdk {
   get logger(): Logger | undefined {
     return this._logger;
   }
-  get algoClient() {
-    if (!this._algorandConnection) throw new Error("Algorand connection not set");
-    const client = this._algorandConnection.algoClient;
-    if (!client) throw new Error("Algorand client not set");
-    return client;
+  get algorand(): AlgorandConnect | undefined {
+    return this._algorandConnection;
   }
-  get algoIndexer() {
-    if (!this._algorandConnection) throw new Error("Algorand connection not set");
-    const indexer = this._algorandConnection.algoClientIndexer;
-    if (!indexer) throw new Error("Algorand indexer not set");
-    return indexer;
+  get solana(): SolanaConnect | undefined {
+    return this._solanaConnection;
   }
 
-  get solClient() {
-    if (!this._solanaConnection) throw new Error("Solana connection not set");
-    const client = this._solanaConnection.solClient;
-    if (!client) throw new Error("Solana client not set");
-    return client;
-  }
+  // get algoClient() {
+  //   if (!this._algorandConnection) throw new Error("Algorand connection not set");
+  //   const client = this._algorandConnection.algoClient;
+  //   if (!client) throw new Error("Algorand client not set");
+  //   return client;
+  // }
+  // get algoIndexer() {
+  //   if (!this._algorandConnection) throw new Error("Algorand connection not set");
+  //   const indexer = this._algorandConnection.algoClientIndexer;
+  //   if (!indexer) throw new Error("Algorand indexer not set");
+  //   return indexer;
+  // }
+  // get solClient() {
+  //   if (!this._solanaConnection) throw new Error("Solana connection not set");
+  //   const client = this._solanaConnection.solClient;
+  //   if (!client) throw new Error("Solana client not set");
+  //   return client;
+  // }
 }

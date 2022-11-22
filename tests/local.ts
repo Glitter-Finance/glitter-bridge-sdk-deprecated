@@ -1,11 +1,11 @@
 
-import algosdk from 'algosdk';
-import path from 'path';
+import * as path from 'path';
 import { Networks } from '../src/networks/GlitterNetwork';
 import GlitterBridgeSDK from '../src/GlitterBridgeSDK';
-import * as solanaWeb3 from "@solana/web3.js";
-import {AlgorandAccounts} from 'glitter-bridge-algorand/lib/accounts';
-import {SolanaAccounts} from 'glitter-bridge-solana/lib/accounts';
+import { AlgorandAccounts } from 'glitter-bridge-algorand/lib/accounts';
+import { SolanaAccounts } from 'glitter-bridge-solana/lib/accounts';
+import * as util from "util";
+
 
 run()
 
@@ -18,23 +18,36 @@ async function runMain(): Promise<boolean> {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
         try {
-            
-            const glitterBridgeSdk = new GlitterBridgeSDK()
+
+            const sdk = new GlitterBridgeSDK()
                 .setRootDirectory(path.join(__dirname, ".."))
                 .loadLogger(path.basename(__filename))
                 .setEnvironment(Networks.testnet)
                 .connectToAlgorand()
                 .connectToSolana()
 
-            console.log("Algorand: "  + process.env.DEV_ALGORAND_ACCOUNT_TEST)
-            console.log("Solana: "  +  process.env.DEV_SOLANA_ACCOUNT_TEST)
+            const logger = sdk.logger;
 
-                //Load Local Algorand Accounts
-            const algoAccount = AlgorandAccounts.add(process.env.DEV_ALGORAND_ACCOUNT_TEST, glitterBridgeSdk.logger);
-            const SolAccount = await SolanaAccounts.add(process.env.DEV_SOLANA_ACCOUNT_TEST, glitterBridgeSdk.logger);
+            //Load Local Algorand Accounts
+            const algoAccount = await AlgorandAccounts.add(process.env.DEV_ALGORAND_ACCOUNT_TEST, sdk.logger, true, true);
+            const SolAccount = await SolanaAccounts.add(process.env.DEV_SOLANA_ACCOUNT_TEST, sdk.logger);
 
             console.log(`============ Setup Algorand Wallet:  ${algoAccount?.addr} =================`)
             console.log(`============ Setup Solana Wallet:  ${SolAccount?.addr} =================`)
+
+            if (!algoAccount || !SolAccount) throw console.error("Failed to load accounts");
+
+            //Check network health
+            const health = await sdk.algorand?.checkHealth();
+            logger?.log(`Algorand Health: ${util.inspect(health, false, 5, true /* enable colors */)}`);
+            const version = await sdk.algorand?.checkVersion();
+            logger?.log(`Algorand Version: ${util.inspect(version, false, 5, true /* enable colors */)}`);
+
+            
+
+
+
+
             resolve(true);
 
         } catch (error) {
