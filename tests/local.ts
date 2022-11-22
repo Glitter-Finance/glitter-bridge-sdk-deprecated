@@ -26,25 +26,15 @@ async function runMain(): Promise<boolean> {
                 .connectToAlgorand()
                 .connectToSolana()
 
+            console.log("Algorand: "  + process.env.DEV_ALGORAND_ACCOUNT_TEST)
+            console.log("Solana: "  +  process.env.DEV_SOLANA_ACCOUNT_TEST)
+
                 //Load Local Algorand Accounts
-            AlgorandAccounts.add(process.env.DEV_ALGORAND_ACCOUNT_TEST, glitterBridgeSdk.logger);
-            SolanaAccounts.add(process.env.DEV_SOLANA_ACCOUNT_TEST, glitterBridgeSdk.logger);
+            const algoAccount = AlgorandAccounts.add(process.env.DEV_ALGORAND_ACCOUNT_TEST, glitterBridgeSdk.logger);
+            const SolAccount = await SolanaAccounts.add(process.env.DEV_SOLANA_ACCOUNT_TEST, glitterBridgeSdk.logger);
 
-
-            let testKey = ;
-            if (!testKey) {
-                throw new Error('DEV_ALGORAND_ACCOUNT_TEST not set');
-            }
-            const algorand_testAccount = algosdk.mnemonicToSecretKey(testKey);
-            console.log('testAccount {}', algorand_testAccount);
-
-            //Load Local Solana Accounts
-            testKey = process.env.DEV_SOLANA_ACCOUNT_TEST;
-            
-
-            console.log(`============ setup Solana Wallet:  ${solWallet.publicKey} =================`)
-
-
+            console.log(`============ Setup Algorand Wallet:  ${algoAccount?.addr} =================`)
+            console.log(`============ Setup Solana Wallet:  ${SolAccount?.addr} =================`)
             resolve(true);
 
         } catch (error) {
@@ -53,8 +43,5 @@ async function runMain(): Promise<boolean> {
     });
 
 }
-
-
-
 
 

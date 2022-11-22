@@ -34,7 +34,7 @@ export default class GlitterBridgeSdk {
   private _solanaConnection: SolanaConnect | undefined;
 
   //Utils  
-  private _logger: Logger;
+  private _logger: Logger|undefined;
 
   //Setters
   public setRootDirectory(rootDirectory: string): GlitterBridgeSdk {

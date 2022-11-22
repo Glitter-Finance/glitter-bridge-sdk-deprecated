@@ -29,6 +29,9 @@
     }
   },
   "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/node": "latest",
+    "eslint": "latest",
     "release-it": "^15.5.0"
   },
   "files": [

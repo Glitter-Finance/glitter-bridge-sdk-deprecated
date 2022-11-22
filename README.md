@@ -31,5 +31,6 @@ npx cz
 npx lerna run build
 npx lerna publish  
 
-yarn2:
+yarn3:
 yarn set version berry
+yarn plugin import typescript

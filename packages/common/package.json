@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/Glitter-Finance/glitter-bridge-sdk#readme",
   "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/node": "latest",
+    "eslint": "latest",
     "release-it": "^15.5.0"
   },
   "dependencies": {
