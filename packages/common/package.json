@@ -1,6 +1,6 @@
 {
   "name": "glitter-bridge-common",
-  "version": "0.2.2",
+  "version": "0.2.5",
   "description": "Glitter Finance Bridge Common Library",
   "scripts": {
     "build": "npx tsc",
