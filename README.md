@@ -17,7 +17,7 @@ source scripts/local/docker/launch.sh
 
 -----------------------------------------------------------------------------
 
-npx ts-node tests/local
+npx ts-node tests/bridgeTestVaultWallets
 
 //Clean package
 docker-compose down -v

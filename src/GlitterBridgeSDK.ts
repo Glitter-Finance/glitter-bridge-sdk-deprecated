@@ -1,15 +1,16 @@
 //import config, { Network } from './config/config';
 
 import { AlgorandConnect } from 'glitter-bridge-algorand/lib/connect';
-import { AlgorandBridge } from 'glitter-bridge-algorand/lib/bridge';
+import { AlgorandBridgeV1 } from 'glitter-bridge-algorand/lib/bridge';
 import { SolanaConnect } from 'glitter-bridge-solana/lib/connect';
-import { AlgorandConfig } from 'glitter-bridge-algorand/lib/config';
-import { AlgorandAccounts } from 'glitter-bridge-algorand/lib/accounts';
-import { AlgorandAssets } from 'glitter-bridge-algorand/lib/assets';
 import * as fs from 'fs'
 import * as path from 'path';
-import { GlitterNetwork, Networks } from './networks/GlitterNetwork';
+import * as util from "util";
+import { GlitterConfigs, Networks } from './configs/GlitterConfigs';
 import { Logger } from "glitter-bridge-common/lib/Utils/logger";
+import { BridgeAccounts } from "glitter-bridge-common/lib/accounts/accounts";
+import { BridgeTokens } from "glitter-bridge-common/lib/tokens";
+import { SolanaBridgeV1 } from 'glitter-bridge-solana/lib/bridge';
 
 // import { AlgoBlockchainClient } from './Algorand/AlgoBlockchainClient';
 // import { SolanaBlockchainClient } from './Solana/SolanaBlockchainClient';
@@ -19,17 +20,18 @@ export enum Environment {
   mainnet = 'mainnet',
 }
 
+export enum BridgeNetworks {
+  algorand = "Algorand",
+  solana = "Solana"
+}
+
 export default class GlitterBridgeSdk {
 
   //Directory
   private _rootDirectory: string | undefined;
 
   //Configs
-  private _glitterEnvironment: GlitterNetwork | undefined;
-  private _algorandConfig: AlgorandConfig | undefined;
-
-  //Bridge
-  private _algorandBridge: AlgorandBridge | undefined;
+  private _glitterNetwork: GlitterConfigs | undefined;
 
   //Connections
   private _algorandConnection: AlgorandConnect | undefined;
@@ -53,48 +55,65 @@ export default class GlitterBridgeSdk {
     switch (network) {
       case Networks.mainnet:
       case Networks.testnet:
-        configUrl = path.join(this._rootDirectory, `./src/networks/${network.toString()}/${network.toString()}.settings.json`);
+        configUrl = path.join(this._rootDirectory, `./src/configs/${network.toString()}.settings.json`);
         break;
     }
 
     //Read the config file
     const configString = fs.readFileSync(configUrl, 'utf8');
-    this._glitterEnvironment = JSON.parse(configString) as GlitterNetwork;
+    this._glitterNetwork = JSON.parse(configString) as GlitterConfigs;
 
-    return this;
-  }
+    console.log(util.inspect(this._glitterNetwork, false, 5, true /* enable colors */));
 
-  //Loaders
-  public loadLogger(logFileName: string): GlitterBridgeSdk {
-    if (!this._rootDirectory) throw new Error("Root directory not set");
-    if (!logFileName) throw new Error("Log file name not set");
+    BridgeAccounts.loadConfig(this._glitterNetwork.accounts);
+    BridgeTokens.loadConfig(this._glitterNetwork.tokens);
 
-    this._logger = new Logger(this._rootDirectory, logFileName);
-    this._logger.log("Logger Loaded");
+
     return this;
   }
 
   //Connectors
-  public connectToAlgorand(): GlitterBridgeSdk {
+  public connect(networks: BridgeNetworks[]): GlitterBridgeSdk {
 
-    //Failsafe
-    if (!this._glitterEnvironment) throw new Error("Glitter environment not set");
-    if (!this._glitterEnvironment.algorand) throw new Error("Algorand environment not set");
-
-    //Get the connections
-    this._algorandConnection = new AlgorandConnect(this._glitterEnvironment.algorand);
-    this._algorandBridge = new AlgorandBridge(this._glitterEnvironment.algorand.appProgramId);
-
-    if (!this._algorandConnection.algoClient) throw new Error("Algorand client not set");
-    AlgorandAccounts.setClient(this._algorandConnection.algoClient);
-    AlgorandAssets.setClient(this._algorandConnection.algoClient);
+    //Connect to the networks
+    networks.forEach(network => {
+      switch (network) {
+        case BridgeNetworks.algorand:
+          this.connectToAlgorand();
+          break;
+        case BridgeNetworks.solana:
+          this.connectToSolana();
+          break;
+      }
+    });
 
     return this;
   }
-  public connectToSolana(
+  private connectToAlgorand(): GlitterBridgeSdk {
+
+    //Failsafe
+    if (!this._glitterNetwork) throw new Error("Glitter environment not set");
+    if (!this._glitterNetwork.algorand) throw new Error("Algorand environment not set");
+
+    //Get the connections
+    this._algorandConnection = new AlgorandConnect(this._glitterNetwork.algorand);
+    AlgorandBridgeV1.setApprovalAppID(this._glitterNetwork.algorand.appProgramId);
+
+    if (!this._algorandConnection.client) throw new Error("Algorand client not set");
+
+    return this;
+  }
+  private connectToSolana(
     solanaUrl = 'https://api.mainnet-beta.solana.com'
   ): GlitterBridgeSdk {
-    this._solanaConnection = new SolanaConnect(solanaUrl);
+    //Failsafe
+    if (!this._glitterNetwork) throw new Error("Glitter environment not set");
+    if (!this._glitterNetwork.solana) throw new Error("Solana environment not set");
+
+    this._solanaConnection = new SolanaConnect(this._glitterNetwork?.solana);
+    //(this._glitterNetwork.algorand.appProgramId);
+
+    if (!this._solanaConnection.client) throw new Error("Solana client not set");
     return this;
   }
 
@@ -109,22 +128,4 @@ export default class GlitterBridgeSdk {
     return this._solanaConnection;
   }
 
-  // get algoClient() {
-  //   if (!this._algorandConnection) throw new Error("Algorand connection not set");
-  //   const client = this._algorandConnection.algoClient;
-  //   if (!client) throw new Error("Algorand client not set");
-  //   return client;
-  // }
-  // get algoIndexer() {
-  //   if (!this._algorandConnection) throw new Error("Algorand connection not set");
-  //   const indexer = this._algorandConnection.algoClientIndexer;
-  //   if (!indexer) throw new Error("Algorand indexer not set");
-  //   return indexer;
-  // }
-  // get solClient() {
-  //   if (!this._solanaConnection) throw new Error("Solana connection not set");
-  //   const client = this._solanaConnection.solClient;
-  //   if (!client) throw new Error("Solana client not set");
-  //   return client;
-  // }
 }

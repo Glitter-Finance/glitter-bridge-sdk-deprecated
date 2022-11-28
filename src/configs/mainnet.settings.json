@@ -1,0 +1,142 @@
+{
+  "name": "mainnet",
+  "algorand": {
+    "name": "Mainnet",
+    "serverUrl": "https://node.algoexplorerapi.io",
+    "serverPort": "",
+    "indexerUrl": "https://algoindexer.algoexplorerapi.io",
+    "indexerPort": "",
+    "nativeToken": "",
+    "appProgramId": "813301700"
+  },
+  "solana": {
+    "name": "Mainnet",
+    "server": "https://api.mainnet-beta.solana.com",
+    "seed": "glitter"
+  },
+  "accounts": {
+    "bridgeAccounts": [
+      {
+        "network": "algorand",
+        "name": "asaOwner",
+        "address": "A3OSGEZJVBXWNXHZREDBB5Y77HSUKA2VS7Y3BWHWRBDOWZ5N4CWXPVOHZE"
+      },
+      {
+        "network": "algorand",
+        "name": "algoOwner",
+        "address": "5TFPIJ5AJLFL5IBOO2H7QXYLDNJNSQYTZJOKISGLT67JF6OYZS42TRHRJ4"
+      },
+      {
+        "network": "algorand",
+        "name": "bridgeOwner",
+        "address": "HUPQIOAF3JZWHW553PGBKWXYSODFYUG5MF6V246TIBW66WVGOAEB7R6XAE"
+      },
+      {
+        "network": "algorand",
+        "name": "feeReceiver",
+        "address": "A2GPNMIWXZDD3O3MP5UFQL6TKAZPBJEDZYHMFFITIAJZXLQH37SJZUWSZQ"
+      },
+      {
+        "network": "algorand",
+        "name": "multisig1",
+        "address": "JPDV3CKFABIXDVH36E7ZBVJ2NC2EQJIBEHCKYTWVC4RDDOHHOPSBWH3QFY"
+      },
+      {
+        "network": "algorand",
+        "name": "multisig2",
+        "address": "DFFTYAB6MWMRTZGHL2GAP7TMK7OUGHDD2AACSO7LXSZ7SY2VLO3OEOJBQU"
+      },
+      {
+        "network": "solana",
+        "name": "bridge_program_id",
+        "address": "GLittnj1E7PtSF5thj6nYgjtMvobyBuZZMuoemXpnv3G"
+      },
+      {
+        "network": "solana",
+        "name": "vesting_program_id",
+        "address": "EMkD74T2spV3A71qfY5PNqVNrNrpbFcdwMF2TerRMr9n"
+      },
+      {
+        "network": "solana",
+        "name": "owner_address",
+        "address": "hY5PXHYm58H5KtJW4GrtegxXnpMruoX3LLP6CufHoHj"
+      }
+    ],
+    "bridgeMSigs": [
+      {
+        "network": "algorand",
+        "name": "bridge",
+        "address": "XJQ25THCV734QIUZARPZGG3NPRFZXTIIU77JSJBT23TJMGL3FXJWVR57OQ",
+        "signers": [
+          "HUPQIOAF3JZWHW553PGBKWXYSODFYUG5MF6V246TIBW66WVGOAEB7R6XAE",
+          "JPDV3CKFABIXDVH36E7ZBVJ2NC2EQJIBEHCKYTWVC4RDDOHHOPSBWH3QFY",
+          "DFFTYAB6MWMRTZGHL2GAP7TMK7OUGHDD2AACSO7LXSZ7SY2VLO3OEOJBQU"
+        ]
+      },
+      {
+        "network": "algorand",
+        "name": "asaVault",
+        "address": "U4A3YARBVMT7PORTC3OWXNC75BMGF6TCHFOQY4ZSIIECC5RW25SVKNKV3U",
+        "signers": [
+          "A3OSGEZJVBXWNXHZREDBB5Y77HSUKA2VS7Y3BWHWRBDOWZ5N4CWXPVOHZE",
+          "JPDV3CKFABIXDVH36E7ZBVJ2NC2EQJIBEHCKYTWVC4RDDOHHOPSBWH3QFY",
+          "DFFTYAB6MWMRTZGHL2GAP7TMK7OUGHDD2AACSO7LXSZ7SY2VLO3OEOJBQU"
+        ]
+      },
+      {
+        "network": "algorand",
+        "name": "algoVault",
+        "address": "R7VCOR74LCUIFH5WKCCMZOS7ADLSDBQJ42YURFPDT3VGYTVNBNG7AIYTCQ",
+        "signers": [
+          "5TFPIJ5AJLFL5IBOO2H7QXYLDNJNSQYTZJOKISGLT67JF6OYZS42TRHRJ4",
+          "JPDV3CKFABIXDVH36E7ZBVJ2NC2EQJIBEHCKYTWVC4RDDOHHOPSBWH3QFY",
+          "DFFTYAB6MWMRTZGHL2GAP7TMK7OUGHDD2AACSO7LXSZ7SY2VLO3OEOJBQU"
+        ]
+      }
+    ]
+  },
+  "tokens": {
+    "tokens": [
+      {
+        "network": "algorand",
+        "symbol": "ALGO",
+        "address": "",
+        "decimals": 6,
+        "params": {
+          "min_transfer": 5,
+          "fee_divisor": 200
+        }
+      },
+      {
+        "network": "algorand",
+        "symbol": "xSOL",
+        "address": 792313023,
+        "decimals": 9,
+        "params": {
+          "min_transfer": 0.05,
+          "fee_divisor": 200
+        }
+      },
+      {
+        "network": "solana",
+        "name": "SOL",
+        "address": "11111111111111111111111111111111",
+        "decimals": 9,
+        "params": {
+          "min_transfer": 5,
+          "fee_divisor": 200
+        }
+      },
+      {
+        "network": "solana",
+        "name": "xALGO",
+        "address": "xALGoH1zUfRmpCriy94qbfoMXHtK6NDnMKzT4Xdvgms",
+        "decimals": 6,
+        "params": {
+          "min_transfer": 0.05,
+          "fee_divisor": 200
+        }
+      }
+    ]
+  }
+}
