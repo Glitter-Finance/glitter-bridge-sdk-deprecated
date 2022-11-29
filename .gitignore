@@ -15,10 +15,6 @@ pids
 *.seed
 *.pid.lock
 
-# Any build folders
-lib
-*/lib
-
 #local Files
 local.*
 */local

@@ -1,11 +1,10 @@
 
 import * as path from 'path';
-import { Networks } from '../src/configs/GlitterConfigs';
-import GlitterBridgeSDK, { BridgeNetworks } from '../src/GlitterBridgeSDK';
-import { AlgorandAccounts } from 'glitter-bridge-algorand/lib/accounts';
-import { SolanaAccounts } from 'glitter-bridge-solana/lib/accounts';
+import GlitterBridgeSDK, { BridgeNetworks } from '../lib/src/GlitterBridgeSDK';
 import * as util from "util";
-
+import { Networks } from '../lib/src/configs/GlitterConfigs';
+import { Sleep } from 'glitter-bridge-common-dev';
+import { PublicKey } from '@solana/web3.js';
 
 run()
 
@@ -24,13 +23,16 @@ async function runMain(): Promise<boolean> {
                 .setEnvironment(Networks.testnet)
                 .connect([BridgeNetworks.algorand, BridgeNetworks.solana]);
 
-            const logger = sdk.logger;
+            const algorandAccounts = sdk.algorand?.accounts;
+            if (!algorandAccounts) throw new Error("Algorand Accounts not loaded");
+            const solanaAccounts = sdk.solana?.accounts;
+            if (!solanaAccounts) throw new Error("Solana Accounts not loaded");
 
             //Load Local Algorand Accounts    
-            let algoAccount = await AlgorandAccounts.add(process.env.DEV_ALGORAND_ACCOUNT_TEST);
-            algoAccount = await AlgorandAccounts.updateAccountDetails(algoAccount, true);
-            let solAccount = await SolanaAccounts.add(process.env.DEV_SOLANA_ACCOUNT_TEST);
-            solAccount = await SolanaAccounts.updateAccountDetails(solAccount, true);
+            let algoAccount = await algorandAccounts.add(process.env.DEV_ALGORAND_ACCOUNT_TEST);
+            algoAccount = await algorandAccounts.updateAccountDetails(algoAccount, true);
+            let solAccount = await solanaAccounts.add(process.env.DEV_SOLANA_ACCOUNT_TEST);
+            solAccount = await solanaAccounts.updateAccountDetails(solAccount, true);
 
             console.log(util.inspect(solAccount, false, 5, true /* enable colors */));
 
@@ -41,17 +43,31 @@ async function runMain(): Promise<boolean> {
 
             //Check network health
             const health = await sdk.algorand?.checkHealth();
-            logger?.log(`Algorand Health: ${util.inspect(health, false, 5, true /* enable colors */)}`);
+            console.log(`Algorand Health: ${util.inspect(health, false, 5, true /* enable colors */)}`);
             const version = await sdk.algorand?.checkVersion();
-            logger?.log(`Algorand Version: ${util.inspect(version, false, 5, true /* enable colors */)}`);
+            console.log(`Algorand Version: ${util.inspect(version, false, 5, true /* enable colors */)}`);
 
             //Create new solana account
-            const newSolAccount = await SolanaAccounts.createNew();
+            const newSolAccount = await solanaAccounts.createNew();
             console.log(util.inspect(newSolAccount, false, 5, true /* enable colors */));
 
             //Fund Account
-            const fundResult = await SolanaAccounts.fundAccount(solAccount, newSolAccount, 0.1);
-            const optin = await SolanaAccounts.optinAsset(newSolAccount, "xALGO");
+            const fundResult = await sdk.solana?.fundAccount(solAccount, newSolAccount, 0.1);              
+                       
+            let balance = await sdk.solana?.waitForBalance(newSolAccount.addr, 0.1,60);
+            console.log(`Balance: ${balance}`);   
+            
+            const optinResult = await sdk.solana?.optinToken(newSolAccount, "xALGO");
+           
+            balance = await sdk.solana?.waitForBalance(newSolAccount.addr, 0.09795572,60);
+            console.log(`Balance: ${balance}`);   
+         
+            
+            const closeAccount = await sdk.solana?.closeAccount( newSolAccount, solAccount);
+           
+           
+           
+            //const optin = await sdk.solana?.optinAsset(newSolAccount, "xALGO");
 
             //Close Accounts
             //const closeTokenAccount = await SolanaAccounts.closeOutAsset(newSolAccount, "xALGO", solAccount.addr);

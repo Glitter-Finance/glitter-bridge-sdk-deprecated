@@ -1,19 +1,10 @@
-//import config, { Network } from './config/config';
-
-import { AlgorandConnect } from 'glitter-bridge-algorand/lib/connect';
-import { AlgorandBridgeV1 } from 'glitter-bridge-algorand/lib/bridge';
-import { SolanaConnect } from 'glitter-bridge-solana/lib/connect';
 import * as fs from 'fs'
+import { AlgorandConnect } from 'glitter-bridge-algorand-dev';
+import { SolanaConnect } from 'glitter-bridge-solana-dev';
 import * as path from 'path';
 import * as util from "util";
 import { GlitterConfigs, Networks } from './configs/GlitterConfigs';
-import { Logger } from "glitter-bridge-common/lib/Utils/logger";
-import { BridgeAccounts } from "glitter-bridge-common/lib/accounts/accounts";
-import { BridgeTokens } from "glitter-bridge-common/lib/tokens";
-import { SolanaBridgeV1 } from 'glitter-bridge-solana/lib/bridge';
-
-// import { AlgoBlockchainClient } from './Algorand/AlgoBlockchainClient';
-// import { SolanaBlockchainClient } from './Solana/SolanaBlockchainClient';
+import { BridgeAccounts, BridgeTokens } from 'glitter-bridge-common-dev';
 
 export enum Environment {
   testnet = 'testnet',
@@ -34,11 +25,8 @@ export default class GlitterBridgeSdk {
   private _glitterNetwork: GlitterConfigs | undefined;
 
   //Connections
-  private _algorandConnection: AlgorandConnect | undefined;
-  private _solanaConnection: SolanaConnect | undefined;
-
-  //Utils  
-  private _logger: Logger | undefined;
+  private _algorand: AlgorandConnect | undefined;
+  private _solana: SolanaConnect | undefined;
 
   //Setters
   public setRootDirectory(rootDirectory: string): GlitterBridgeSdk {
@@ -55,7 +43,7 @@ export default class GlitterBridgeSdk {
     switch (network) {
       case Networks.mainnet:
       case Networks.testnet:
-        configUrl = path.join(this._rootDirectory, `./src/configs/${network.toString()}.settings.json`);
+        configUrl = path.join(this._rootDirectory, `./lib/src/configs/${network.toString()}.settings.json`);
         break;
     }
 
@@ -96,36 +84,30 @@ export default class GlitterBridgeSdk {
     if (!this._glitterNetwork.algorand) throw new Error("Algorand environment not set");
 
     //Get the connections
-    this._algorandConnection = new AlgorandConnect(this._glitterNetwork.algorand);
-    AlgorandBridgeV1.setApprovalAppID(this._glitterNetwork.algorand.appProgramId);
+    this._algorand = new AlgorandConnect(this._glitterNetwork.algorand);
 
-    if (!this._algorandConnection.client) throw new Error("Algorand client not set");
+    if (!this._algorand.client) throw new Error("Algorand client not set");
 
     return this;
   }
-  private connectToSolana(
-    solanaUrl = 'https://api.mainnet-beta.solana.com'
-  ): GlitterBridgeSdk {
+  private connectToSolana(): GlitterBridgeSdk {
     //Failsafe
     if (!this._glitterNetwork) throw new Error("Glitter environment not set");
     if (!this._glitterNetwork.solana) throw new Error("Solana environment not set");
 
-    this._solanaConnection = new SolanaConnect(this._glitterNetwork?.solana);
+    this._solana = new SolanaConnect(this._glitterNetwork?.solana);
     //(this._glitterNetwork.algorand.appProgramId);
 
-    if (!this._solanaConnection.client) throw new Error("Solana client not set");
+    if (!this._solana.client) throw new Error("Solana client not set");
     return this;
   }
 
   //Getters  
-  get logger(): Logger | undefined {
-    return this._logger;
-  }
   get algorand(): AlgorandConnect | undefined {
-    return this._algorandConnection;
+    return this._algorand;
   }
   get solana(): SolanaConnect | undefined {
-    return this._solanaConnection;
+    return this._solana;
   }
 
 }

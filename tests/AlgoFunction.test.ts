@@ -1,14 +1,14 @@
 import * as path from 'path';
-import { Networks } from '../src/configs/GlitterConfigs';
-import GlitterBridgeSDK, { BridgeNetworks } from '../src/GlitterBridgeSDK';
+import { Networks } from '../lib/src/configs/GlitterConfigs';
+import GlitterBridgeSDK, { BridgeNetworks } from '../lib/src/GlitterBridgeSDK';
 
-import { AlgorandAccount, AlgorandAccounts } from 'glitter-bridge-algorand/lib/accounts';
-import { SolanaAccount, SolanaAccounts } from 'glitter-bridge-solana/lib/accounts';
+import { AlgorandAccount, AlgorandAccounts } from 'glitter-bridge-algorand-dev';
+import { SolanaAccount, SolanaAccounts } from 'glitter-bridge-solana-dev';
 
 describe("Glitter bridge SDK Test Algorand to Solana", () => {
     console.log("Start");
 
-    const glitterBridgeSdk = new GlitterBridgeSDK()
+    const sdk = new GlitterBridgeSDK()
         .setRootDirectory(path.join(__dirname, ".."))
         .setEnvironment(Networks.testnet)
         .connect([BridgeNetworks.algorand, BridgeNetworks.solana]);
@@ -19,12 +19,12 @@ describe("Glitter bridge SDK Test Algorand to Solana", () => {
     beforeAll(async () => {
         console.log("Loading Accounts");
         
-        algoAccount= await AlgorandAccounts.add(process.env.DEV_ALGORAND_ACCOUNT_TEST);
-        await AlgorandAccounts.updateAccountDetails(algoAccount);
+        algoAccount= await sdk.algorand?.accounts?.add(process.env.DEV_ALGORAND_ACCOUNT_TEST);
+        await sdk.algorand?.accounts?.updateAccountDetails(algoAccount);
 
         console.log(`============ Setup Algorand Wallet:  ${algoAccount?.addr} =================`)
 
-        SolAccount = await SolanaAccounts.add(process.env.DEV_SOLANA_ACCOUNT_TEST);
+        SolAccount = await sdk.solana?.accounts?.add(process.env.DEV_SOLANA_ACCOUNT_TEST);
         console.log(`============ Setup Solana Wallet:  ${SolAccount?.addr} =================`)
    
         if (!algoAccount || !SolAccount) {
