@@ -10,8 +10,8 @@
     "appProgramId": "98624397"
   },
   "solana": {
-    "name": "Devnet",
-    "server": "https://api.devnet.solana.com",
+    "name": "Testnet",
+    "server": "https://api.testnet.solana.com",
     "seed": "glitter"
   },
   "accounts": {

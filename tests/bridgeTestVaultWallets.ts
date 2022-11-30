@@ -32,14 +32,11 @@ async function runMain(): Promise<boolean> {
             let algoAccount = await algorandAccounts.add(process.env.DEV_ALGORAND_ACCOUNT_TEST);
             algoAccount = await algorandAccounts.updateAccountDetails(algoAccount, true);
             let solAccount = await solanaAccounts.add(process.env.DEV_SOLANA_ACCOUNT_TEST);
-            solAccount = await solanaAccounts.updateAccountDetails(solAccount, true);
-
-            console.log(util.inspect(solAccount, false, 5, true /* enable colors */));
+            solAccount = await solanaAccounts.updateAccountDetails(solAccount, true);                    
+            if (!algoAccount || !solAccount) throw console.error("Failed to load accounts");
 
             console.log(`============ Setup Algorand Wallet:  ${algoAccount?.addr} =================`)
             console.log(`============ Setup Solana Wallet:  ${solAccount?.addr} =================`)
-
-            if (!algoAccount || !solAccount) throw console.error("Failed to load accounts");
 
             //Check network health
             const health = await sdk.algorand?.checkHealth();
@@ -47,23 +44,33 @@ async function runMain(): Promise<boolean> {
             const version = await sdk.algorand?.checkVersion();
             console.log(`Algorand Version: ${util.inspect(version, false, 5, true /* enable colors */)}`);
 
-            //Create new solana account
+            //Create new accounts
+            console.log("creating new algo account =================");
+            const newAlgoAccount = await algorandAccounts.createNew();
+            console.log("creating new sol account =================");
             const newSolAccount = await solanaAccounts.createNew();
-            console.log(util.inspect(newSolAccount, false, 5, true /* enable colors */));
-
+           
             //Fund Account
-            const fundResult = await sdk.solana?.fundAccount(solAccount, newSolAccount, 0.1);              
-                       
+            const fundResult = await sdk.solana?.fundAccount(solAccount, newSolAccount, 0.1);   
             let balance = await sdk.solana?.waitForBalance(newSolAccount.addr, 0.1,60);
             console.log(`Balance: ${balance}`);   
             
-            const optinResult = await sdk.solana?.optinToken(newSolAccount, "xALGO");
-           
+            //Optin to xALGO
+            const optinResult = await sdk.solana?.optinToken(newSolAccount, "xALGO");           
             balance = await sdk.solana?.waitForBalance(newSolAccount.addr, 0.09795572,60);
             console.log(`Balance: ${balance}`);   
-         
+
+            //Fund xALGO
+            const sendToken = await sdk.solana?.fundAccountTokens(solAccount, newSolAccount, 0.05, "xALGO");   
+            const tokenBalance = await sdk.solana?.waitForTokenBalance(newSolAccount.addr, "xALGO",0.05);
+            console.log(`Token Balance: ${tokenBalance}`);             
+           
+            //Close Token Account
+            const closeTokenAccount = await sdk.solana?.closeOutTokenAccount( newSolAccount,solAccount, "xALGO");  
             
-            const closeAccount = await sdk.solana?.closeAccount( newSolAccount, solAccount);
+            balance = await sdk.solana?.waitForBalance(newSolAccount.addr, 0.09794072,60);
+            console.log(`Balance: ${balance}`);   
+            const closeAccount = await sdk.solana?.closeOutAccount( newSolAccount, solAccount);
            
            
            
