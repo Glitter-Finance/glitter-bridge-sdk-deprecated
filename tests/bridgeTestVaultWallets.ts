@@ -27,6 +27,10 @@ async function runMain(): Promise<boolean> {
             if (!algorandAccounts) throw new Error("Algorand Accounts not loaded");
             const solanaAccounts = sdk.solana?.accounts;
             if (!solanaAccounts) throw new Error("Solana Accounts not loaded");
+            const algorand = sdk.algorand;
+            if (!algorand) throw new Error("Algorand not loaded");
+            const solana = sdk.solana;
+            if (!solana) throw new Error("Solana not loaded");
 
             //Load Local Algorand Accounts    
             let algoAccount = await algorandAccounts.add(process.env.DEV_ALGORAND_ACCOUNT_TEST);
@@ -37,9 +41,23 @@ async function runMain(): Promise<boolean> {
 
             console.log(`============ Setup Algorand Wallet:  ${algoAccount?.addr} =================`)
             console.log(`============ Setup Solana Wallet:  ${solAccount?.addr} =================`)
+            
+            const algoBalance = await algorand.getBalance(algoAccount.addr);
+            const solBalance = await solana.getBalance(solAccount.addr);
+            console.log(`Algorand Balance: ${algoBalance}`);
+            console.log(`Solana Balance: ${solBalance}`);
 
-            //let x = await sdk.solana.bridge(solAccount, "sol", "algorand", algoAccount.addr, "xSOL", 0.05);
-            let x = await sdk.solana.bridge(solAccount, "xAlgo", "algorand", algoAccount.addr, "algo", 5);
+            const xSolBalance = await algorand.getTokenBalance(algoAccount.addr, "xSol");
+            const xAlgoBalance = await solana.getTokenBalance(solAccount.addr, "xAlgo");
+            console.log(`xSol Balance: ${xSolBalance}`);
+            console.log(`xAlgo Balance: ${xAlgoBalance}`);
+
+            //const solBridge = sdk.solana.bridge(solAccount, "sol", "algorand", algoAccount.addr, "xSOL", 0.05);
+            //const algoBridge = 
+
+
+
+            //let x = await sdk.solana.bridge(solAccount, "xAlgo", "algorand", algoAccount.addr, "algo", 0.05);
 
 
             // //Check network health
@@ -48,11 +66,7 @@ async function runMain(): Promise<boolean> {
             // const version = await sdk.algorand?.checkVersion();
             // console.log(`Algorand Version: ${util.inspect(version, false, 5, true /* enable colors */)}`);
 
-            // //Create new accounts
-            // console.log("creating new algo account =================");
-            // const newAlgoAccount = await algorandAccounts.createNew();
-            // console.log("creating new sol account =================");
-            // const newSolAccount = await solanaAccounts.createNew();
+           
 
         
 
