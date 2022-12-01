@@ -38,7 +38,8 @@ async function runMain(): Promise<boolean> {
             console.log(`============ Setup Algorand Wallet:  ${algoAccount?.addr} =================`)
             console.log(`============ Setup Solana Wallet:  ${solAccount?.addr} =================`)
 
-            let x = await sdk.solana.bridge(solAccount, "sol", "algorand", algoAccount.addr, "xSOL", 0.05);
+            //let x = await sdk.solana.bridge(solAccount, "sol", "algorand", algoAccount.addr, "xSOL", 0.05);
+            let x = await sdk.solana.bridge(solAccount, "xAlgo", "algorand", algoAccount.addr, "algo", 5);
 
 
             // //Check network health
