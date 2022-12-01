@@ -4,10 +4,12 @@ import {
 } from "./src/GlitterBridgeSDK";
 import {
     GlitterNetworks,
+    GlitterConfigs
 }   from "./src/configs/GlitterConfigs";
 
 export{
     GlitterBridgeSDK,
     BridgeNetworks,
-    GlitterNetworks
+    GlitterNetworks,
+    GlitterConfigs
 }

@@ -3,7 +3,7 @@ import { AlgorandConnect } from 'glitter-bridge-algorand-dev';
 import { SolanaConnect } from 'glitter-bridge-solana-dev';
 import * as path from 'path';
 import * as util from "util";
-import { GlitterConfigs, Networks } from './configs/GlitterConfigs';
+import { GlitterConfigs, GlitterNetworks } from './configs/GlitterConfigs';
 import { BridgeAccounts, BridgeTokens } from 'glitter-bridge-common-dev';
 
 export enum Environment {
@@ -33,7 +33,7 @@ export class GlitterBridgeSDK {
     this._configDirectory = directory;
     return this;
   }
-  public setEnvironment(network: Networks): GlitterBridgeSDK {
+  public setEnvironment(network: GlitterNetworks): GlitterBridgeSDK {
 
     //Fail safe
     if (!this._configDirectory) {
@@ -43,8 +43,8 @@ export class GlitterBridgeSDK {
     //Get the environment config path
     let configUrl = '';
     switch (network) {
-      case Networks.mainnet:
-      case Networks.testnet:
+      case GlitterNetworks.mainnet:
+      case GlitterNetworks.testnet:
         configUrl = path.join(this._configDirectory, `./${network.toString()}.settings.json`);
         break;
     }
