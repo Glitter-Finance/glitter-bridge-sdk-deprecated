@@ -2,7 +2,7 @@
 import * as path from 'path';
 import {GlitterBridgeSDK, BridgeNetworks } from '../lib/src/GlitterBridgeSDK';
 import * as util from "util";
-import { Networks } from '../lib/src/configs/GlitterConfigs';
+import { GlitterNetworks } from '../lib/src/configs/GlitterConfigs';
 import { Sleep } from 'glitter-bridge-common-dev';
 import { PublicKey } from '@solana/web3.js';
 
@@ -20,7 +20,7 @@ async function runMain(): Promise<boolean> {
 
             const sdk = new GlitterBridgeSDK()
                 .setConfigDirectory(path.join(__dirname, "../lib/src/configs"))
-                .setEnvironment(Networks.testnet)
+                .setEnvironment(GlitterNetworks.testnet)
                 .connect([BridgeNetworks.algorand, BridgeNetworks.solana]);
 
             const algorandAccounts = sdk.algorand?.accounts;
