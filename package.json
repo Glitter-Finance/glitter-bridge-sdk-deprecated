@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "build": "npx tsc",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "release": "release-it"
   },
   "dependencies": {
     "@solana/spl-token": "^0.3.6",
@@ -45,6 +46,11 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "release-it": {
+    "github": {
+      "release": true
     }
   },
   "files": [
