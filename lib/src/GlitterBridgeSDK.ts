@@ -16,10 +16,10 @@ export enum BridgeNetworks {
   solana = "Solana"
 }
 
-export default class GlitterBridgeSdk {
+export class GlitterBridgeSDK {
 
   //Directory
-  private _rootDirectory: string | undefined;
+  private _configDirectory: string | undefined;
 
   //Configs
   private _glitterNetwork: GlitterConfigs | undefined;
@@ -29,21 +29,23 @@ export default class GlitterBridgeSdk {
   private _solana: SolanaConnect | undefined;
 
   //Setters
-  public setRootDirectory(rootDirectory: string): GlitterBridgeSdk {
-    this._rootDirectory = rootDirectory;
+  public setConfigDirectory(directory: string): GlitterBridgeSDK {
+    this._configDirectory = directory;
     return this;
   }
-  public setEnvironment(network: Networks): GlitterBridgeSdk {
+  public setEnvironment(network: Networks): GlitterBridgeSDK {
 
     //Fail safe
-    if (!this._rootDirectory) throw new Error("Root directory not set");
+    if (!this._configDirectory) {
+      this._configDirectory = path.join(__dirname, "./configs");
+    }
 
     //Get the environment config path
     let configUrl = '';
     switch (network) {
       case Networks.mainnet:
       case Networks.testnet:
-        configUrl = path.join(this._rootDirectory, `./lib/src/configs/${network.toString()}.settings.json`);
+        configUrl = path.join(this._configDirectory, `./${network.toString()}.settings.json`);
         break;
     }
 
@@ -61,7 +63,7 @@ export default class GlitterBridgeSdk {
   }
 
   //Connectors
-  public connect(networks: BridgeNetworks[]): GlitterBridgeSdk {
+  public connect(networks: BridgeNetworks[]): GlitterBridgeSDK {
 
     //Connect to the networks
     networks.forEach(network => {
@@ -77,7 +79,7 @@ export default class GlitterBridgeSdk {
 
     return this;
   }
-  private connectToAlgorand(): GlitterBridgeSdk {
+  private connectToAlgorand(): GlitterBridgeSDK {
 
     //Failsafe
     if (!this._glitterNetwork) throw new Error("Glitter environment not set");
@@ -90,7 +92,7 @@ export default class GlitterBridgeSdk {
 
     return this;
   }
-  private connectToSolana(): GlitterBridgeSdk {
+  private connectToSolana(): GlitterBridgeSDK {
     //Failsafe
     if (!this._glitterNetwork) throw new Error("Glitter environment not set");
     if (!this._glitterNetwork.solana) throw new Error("Solana environment not set");

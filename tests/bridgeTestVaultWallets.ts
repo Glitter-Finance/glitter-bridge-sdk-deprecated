@@ -1,6 +1,6 @@
 
 import * as path from 'path';
-import GlitterBridgeSDK, { BridgeNetworks } from '../lib/src/GlitterBridgeSDK';
+import {GlitterBridgeSDK, BridgeNetworks } from '../lib/src/GlitterBridgeSDK';
 import * as util from "util";
 import { Networks } from '../lib/src/configs/GlitterConfigs';
 import { Sleep } from 'glitter-bridge-common-dev';
@@ -19,7 +19,7 @@ async function runMain(): Promise<boolean> {
         try {
 
             const sdk = new GlitterBridgeSDK()
-                .setRootDirectory(path.join(__dirname, ".."))
+                .setConfigDirectory(path.join(__dirname, "../lib/src/configs"))
                 .setEnvironment(Networks.testnet)
                 .connect([BridgeNetworks.algorand, BridgeNetworks.solana]);
 
