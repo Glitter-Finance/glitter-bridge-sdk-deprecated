@@ -3,15 +3,17 @@
     "target": "es2016",
     "module": "commonjs",
     "declaration": true,
-    "outDir": "./lib",
+    "outDir": "./dist",
     "strict": true,
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "lib": [
       // ... other libs
       "ES2021.String",
       "dom"
     ]
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "**/__tests__/*"]
+  "include": ["lib"],
+  "exclude": ["node_modules", "**/__tests__/*"],
+  "types": ["webrtc"]
 }

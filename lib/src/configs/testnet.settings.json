@@ -12,7 +12,7 @@
   "solana": {
     "name": "Testnet",
     "server": "https://api.testnet.solana.com",
-    "seed": "glitter"
+    "programAddress": "GLittnj1E7PtSF5thj6nYgjtMvobyBuZZMuoemXpnv3G"
   },
   "accounts": {
     "bridgeAccounts": [
