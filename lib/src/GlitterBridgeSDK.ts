@@ -52,12 +52,10 @@ export class GlitterBridgeSDK {
     //Read the config file
     const configString = fs.readFileSync(configUrl, 'utf8');
     this._glitterNetwork = JSON.parse(configString) as GlitterConfigs;
-
-    console.log(util.inspect(this._glitterNetwork, false, 5, true /* enable colors */));
+    //console.log(util.inspect(this._glitterNetwork, false, 5, true /* enable colors */));
 
     BridgeAccounts.loadConfig(this._glitterNetwork.accounts);
     BridgeTokens.loadConfig(this._glitterNetwork.tokens);
-
 
     return this;
   }
