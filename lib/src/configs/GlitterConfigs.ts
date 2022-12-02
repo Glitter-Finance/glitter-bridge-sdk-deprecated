@@ -1,6 +1,6 @@
-import { AlgorandConfig } from "glitter-bridge-algorand-dev";
-import { BridgeAccountConfig, BridgeTokenConfig } from "glitter-bridge-common-dev";
-import { SolanaConfig } from "glitter-bridge-solana-dev";
+import { AlgorandConfig } from "glitter-bridge-algorand";
+import { BridgeAccountConfig, BridgeTokenConfig } from "glitter-bridge-common";
+import { SolanaConfig } from "glitter-bridge-solana";
 
 import * as GlitterConfigs1 from './mainnet.settings.json';
 import * as GlitterConfigs2 from './testnet.settings.json';

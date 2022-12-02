@@ -3,7 +3,7 @@ import * as path from 'path';
 import {GlitterBridgeSDK, BridgeNetworks } from '../lib/src/GlitterBridgeSDK';
 import * as util from "util";
 import { GlitterNetworks } from '../lib/src/configs/GlitterConfigs';
-import { Sleep } from 'glitter-bridge-common-dev';
+import { Sleep } from 'glitter-bridge-common';
 import { PublicKey } from '@solana/web3.js';
 
 run()
