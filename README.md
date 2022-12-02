@@ -1,20 +1,4 @@
-# glitter-bridge-sdk
+# Glitter Bridge SDK
+This sdk is written by Glitter Finance to make integration of the Glitter Bridge into your application easy.
 
-
------------------------------------------------------------------------------
-# 2| Dockerize
-
-Start Docker (HOST):
-```
-docker-compose run --rm glitter sh
-```
-
------------------------------------------------------------------------------
-
-npx ts-node tests/bridgeTestVaultWallets
-
-//Clean package
-docker-compose down -v
-
-//Git commit
-npx cz
+The sdk is written in typescript, but compiled to JS and added to this repo using npm packages.
