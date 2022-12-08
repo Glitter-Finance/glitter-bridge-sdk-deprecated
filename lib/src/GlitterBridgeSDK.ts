@@ -1,10 +1,10 @@
 import * as fs from 'fs'
-import { AlgorandConnect } from 'glitter-bridge-algorand';
-import { SolanaConnect } from 'glitter-bridge-solana';
+import { AlgorandConnect } from 'glitter-bridge-algorand-dev';
+import { SolanaConnect } from 'glitter-bridge-solana-dev';
 import * as path from 'path';
 import * as util from "util";
 import { GlitterConfigs, GlitterNetworks } from './configs/GlitterConfigs';
-import { BridgeAccounts, BridgeTokens } from 'glitter-bridge-common';
+import { BridgeAccounts, BridgeTokens } from 'glitter-bridge-common-dev';
 
 export enum Environment {
   testnet = 'testnet',

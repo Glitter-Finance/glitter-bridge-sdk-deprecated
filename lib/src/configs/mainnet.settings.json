@@ -109,6 +109,16 @@
       },
       {
         "network": "algorand",
+        "symbol": "USDC",
+        "address": 31566704,
+        "decimals": 6,
+        "params": {
+          "min_transfer": 5,
+          "fee_divisor": 200
+        }
+      },
+      {
+        "network": "algorand",
         "symbol": "xSOL",
         "address": 792313023,
         "decimals": 9,
