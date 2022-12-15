@@ -23,6 +23,9 @@ export class GlitterBridgeSDK {
 
   //Configs
   private _glitterNetwork: GlitterConfigs | undefined;
+  
+  //RPC overrides
+  private _rpcOverrides: { [key: string]: string } = {};
 
   //Connections
   private _algorand: AlgorandConnect | undefined;
@@ -59,6 +62,10 @@ export class GlitterBridgeSDK {
 
     return this;
   }
+  public setRPC(network: BridgeNetworks, rpc: string): GlitterBridgeSDK {
+    this._rpcOverrides[network] = rpc;
+    return this;
+  }
 
   //Connectors
   public connect(networks: BridgeNetworks[]): GlitterBridgeSDK {
@@ -83,6 +90,11 @@ export class GlitterBridgeSDK {
     if (!this._glitterNetwork) throw new Error("Glitter environment not set");
     if (!this._glitterNetwork.algorand) throw new Error("Algorand environment not set");
 
+    if (this._rpcOverrides[BridgeNetworks.algorand]) {
+      console.log("Algorand RPC override: " + this._rpcOverrides[BridgeNetworks.algorand]);
+      this._glitterNetwork.algorand.serverUrl = this._rpcOverrides[BridgeNetworks.algorand];
+    }
+
     //Get the connections
     this._algorand = new AlgorandConnect(this._glitterNetwork.algorand);
 
@@ -94,6 +106,11 @@ export class GlitterBridgeSDK {
     //Failsafe
     if (!this._glitterNetwork) throw new Error("Glitter environment not set");
     if (!this._glitterNetwork.solana) throw new Error("Solana environment not set");
+
+    if (this._rpcOverrides[BridgeNetworks.solana]) {
+      console.log("Solana RPC override: " + this._rpcOverrides[BridgeNetworks.solana]);
+      this._glitterNetwork.solana.server = this._rpcOverrides[BridgeNetworks.solana];
+    }
 
     this._solana = new SolanaConnect(this._glitterNetwork?.solana);
     //(this._glitterNetwork.algorand.appProgramId);
