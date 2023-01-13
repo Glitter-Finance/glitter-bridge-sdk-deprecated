@@ -119,21 +119,21 @@
       },
       {
         "network": "solana",
-        "name": "SOL",
+        "symbol": "SOL",
         "address": "11111111111111111111111111111111",
         "decimals": 9,
         "params": {
-          "min_transfer": 5,
+          "min_transfer": 0.05,
           "fee_divisor": 200
         }
       },
       {
         "network": "solana",
-        "name": "xALGO",
+        "symbol": "xALGO",
         "address": "xALGoH1zUfRmpCriy94qbfoMXHtK6NDnMKzT4Xdvgms",
         "decimals": 6,
         "params": {
-          "min_transfer": 0.05,
+          "min_transfer": 5,
           "fee_divisor": 200
         }
       }
